@@ -9769,7 +9769,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Results
+  m_Text: 
 --- !u!222 &1614236758
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10098,6 +10098,7 @@ MonoBehaviour:
   missesText: {fileID: 2143914807}
   rankText: {fileID: 129515595}
   finalScoreText: {fileID: 1947847551}
+  winLoseText: {fileID: 1614236757}
   countdownMusic: {fileID: 8300000, guid: 2f24cd8c96fd7a443a2612a2ce88c038, type: 3}
   gameMusic: {fileID: 8300000, guid: 0be0010d997659d45a0faebc15920af2, type: 3}
   countdownText: {fileID: 12159394}

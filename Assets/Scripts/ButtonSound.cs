@@ -9,7 +9,7 @@ public class ButtonSound : MonoBehaviour, IPointerEnterHandler, IPointerClickHan
     public AudioClip clickSound;
     private AudioSource audioSource;
 
-    public float soundVolume = 1.0f;  // Default volume for the button sounds
+    public float soundVolume = 1.0f; 
 
     void Start()
     {

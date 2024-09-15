@@ -6,7 +6,6 @@ public class ExitOnEscape : MonoBehaviour
 {
     void Update()
     {
-        // Check if the Escape key is pressed
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ExitGame();
@@ -15,7 +14,6 @@ public class ExitOnEscape : MonoBehaviour
 
     void ExitGame()
     {
-        // If running in the Unity Editor
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

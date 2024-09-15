@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//class that sets the song tempo
 public class BeatScroller : MonoBehaviour
 {
     public float beatTempo;

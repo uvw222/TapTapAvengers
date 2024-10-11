@@ -311,9 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 190740999}
-  song1: {fileID: 8300000, guid: e3a69a4c43438c44f87a97aada2ae0e4, type: 3}
-  song2: {fileID: 8300000, guid: 71e600d10e153414cad0e93ded8697af, type: 3}
-  song3: {fileID: 8300000, guid: 4c49789af58de954095d7867478276db, type: 3}
+  arrowSpawnLocation: {fileID: 0}
 --- !u!82 &190740999
 AudioSource:
   m_ObjectHideFlags: 0
@@ -512,11 +510,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 820022115}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: LoadGame
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 4cab0512a7b114144ba9dd5b726c1b83, type: 2}
+          m_ObjectArgumentAssemblyTypeName: SongData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: BabyShark
@@ -1587,11 +1585,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 820022115}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: LoadGame
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: c7cee3c536a117c468f4c54e8e533c4c, type: 2}
+          m_ObjectArgumentAssemblyTypeName: SongData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: FISHER
@@ -3475,11 +3473,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 820022115}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: LoadGame
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: f41bcb15c0b176f46930c49f45707311, type: 2}
+          m_ObjectArgumentAssemblyTypeName: SongData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: NANANA

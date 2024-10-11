@@ -4,22 +4,25 @@ using System.Collections;
 
 public class SceneLoader : MonoBehaviour
 {
-    public AudioSource musicSource; 
-    public float delayBeforeLoad = 0.5f;  
+    public AudioSource musicSource;
+    public float delayBeforeLoad = 0.5f;
 
-    public void LoadScene(string sceneName)
+    public void LoadGame(SongData songData)
     {
         if (musicSource != null)
         {
-            musicSource.Stop(); 
+            musicSource.Stop();
         }
 
-        StartCoroutine(LoadSceneWithDelay(sceneName));
+        StartCoroutine(LoadSceneWithDelay(songData));
     }
 
-    IEnumerator LoadSceneWithDelay(string sceneName)
+    IEnumerator LoadSceneWithDelay(SongData songData)
     {
         yield return new WaitForSeconds(delayBeforeLoad);
-        SceneManager.LoadScene(sceneName);
+
+        GameManager2.Instance.SetSongData(songData); 
+        //SceneManager.LoadScene("FISHER");
+        SceneManager.LoadScene("GameScene");
     }
 }

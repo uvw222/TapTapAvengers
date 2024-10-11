@@ -1,36 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.IO;
 using System.Linq;
-
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
     private float totalNotes, normalHits, goodHits, perfectHits, missedHits;
     public GameObject resultsScreen;
-    public AudioSource theMusic;
+    public AudioSource theMusic;   // AudioSource for the song
+    public AudioSource countdownMusicSource;  // Separate AudioSource for countdown music
     public bool startPlaying;
     public BeatScroller theBS;
     public static GameManager instance;
-    public Text scoreText, multiText, percentHitText, normalsText, goodsText, perfectsText, missesText, rankText, finalScoreText, winLoseText;
-    public AudioClip countdownMusic;
-    public AudioClip gameMusic;
-    public Text countdownText;
-    public int countdownTime = 3;
+    public Text scoreText, multiText, percentHitText, normalsText, goodsText, perfectsText, missesText, rankText, finalScoreText, countdownText;
     public int currentScore, scorePerNote = 100, scorePerGoodNote = 125, scorePerPerfectNote = 150;
     public int currentMultiplier, multiplierTracker;
     public int[] multiplierThresholds;
-
     public Button tryAgainButton;
     public Button quitButton;
-    public Sprite[] backgrounds; // Array of background images
-    public Image backgroundImage;
-    public AudioClip[] songs;
-    private int currentBackgroundIndex = 0;
-    private int currentSongIndex = 0;
+
+    private SongData currentSongData;  // The current song's data
+    public GameObject buttonsObject;
+
+    // New field for the Bg SpriteRenderer object
+    public SpriteRenderer bg;
+
+    // Note holder for spawning arrows
+    public Transform noteHolder;
 
     void Start()
     {
@@ -42,42 +41,121 @@ public class GameManager : MonoBehaviour
         totalNotes = FindObjectsOfType<NoteObject>().Length;
         resultsScreen.SetActive(false);
 
-        SetBackground(0);
-        PlayCountdownMusic();
-        StartCoroutine(StartCountdown());
-    }
-
-    IEnumerator StartCountdown()
-    {
-        int count = countdownTime;
-        while (count > 0)
+        // Disable buttons at the start
+        if (buttonsObject != null)
         {
-            countdownText.text = count.ToString();
-            yield return new WaitForSeconds(1f);
-            count--;
+            buttonsObject.SetActive(false);
         }
 
-        countdownText.text = "Go!";
-        yield return new WaitForSeconds(1f);
-        countdownText.gameObject.SetActive(false);
-        PlayGameMusic();
-        startPlaying = true;
-        theBS.hasStarted = true;
+        // Fetch the SongData from GameManager2
+        currentSongData = GameManager2.Instance.GetSongData();
+
+        if (currentSongData != null)
+        {
+            SetBackground(currentSongData.backgroundImage);  // Set the background from SongData
+            SpawnArrows(currentSongData.arrowsPrefab);       // Spawn arrows from SongData
+            StartCoroutine(PlayCountdownAndStartSong());     // Play countdown music first, then the actual song
+        }
+        else
+        {
+            Debug.LogError("No SongData provided to GameManager.");
+        }
     }
 
-    void PlayCountdownMusic()
+    void SetBackground(Sprite backgroundSprite)
     {
-        theMusic.clip = countdownMusic;
-        theMusic.Play();
+        if (bg == null)
+        {
+            return;
+        }
+
+        if (backgroundSprite != null)
+        {
+            bg.sprite = backgroundSprite;  // Set the sprite for the background image
+        }
+    }
+
+    /// <summary>
+    /// Spawns the arrows from the prefab in the SongData.
+    /// </summary>
+    /// <param name="arrowsPrefab">The prefab containing the arrows for the current song.</param>
+    void SpawnArrows(GameObject arrowsPrefab)
+    {
+        if (arrowsPrefab == null)
+        {
+            Debug.LogError("No arrows prefab assigned in SongData.");
+            return;
+        }
+
+        // Find or create the NoteHolder parent object
+        GameObject noteHolder = GameObject.Find("NoteHolder");
+        if (noteHolder == null)
+        {
+            noteHolder = new GameObject("NoteHolder");
+        }
+
+        // Instantiate the arrows prefab as a child of NoteHolder
+        GameObject arrowsInstance = Instantiate(arrowsPrefab, noteHolder.transform);
+    }
+
+    IEnumerator PlayCountdownAndStartSong()
+    {
+        // Assuming you have a Text UI element in the scene assigned to this
+        countdownText.gameObject.SetActive(true);
+
+        // Start countdown from 3 down to 0
+        for (int i = 3; i > 0; i--)
+        {
+            countdownText.text = i.ToString();  // Update the text with the countdown number
+            yield return new WaitForSeconds(1f); // Wait for 1 second
+        }
+
+        // After the countdown, set text to "Go!" and then hide it
+        countdownText.text = "Go!";
+        yield return new WaitForSeconds(1f);
+
+        countdownText.gameObject.SetActive(false);
+
+        // Enable the buttons after the countdown
+        if (buttonsObject != null)
+        {
+            buttonsObject.SetActive(true);
+        }
+
+        // Start playing the actual song after the countdown
+        PlayGameMusic();
+        startPlaying = true;
+
+        // Start the BeatScroller to move the arrows
+        StartBeatScroller();
     }
 
     void PlayGameMusic()
     {
-        // Stops the countdown music and start the play music
-        theMusic.Stop();
-        theMusic.clip = gameMusic;
-        theMusic.Play();
+        // Play the selected song from SongData
+        if (currentSongData != null && currentSongData.songClip != null)
+        {
+            theMusic.clip = currentSongData.songClip;  // Assign the song from SongData
+            theMusic.Play();  // Play the game music
+        }
+        else
+        {
+            Debug.LogError("No songClip assigned in the current SongData.");
+        }
     }
+
+    // New function to start the BeatScroller
+    void StartBeatScroller()
+    {
+        // Try to find the BeatScroller component on the instantiated NoteHolder object
+        BeatScroller beatScroller = noteHolder.GetComponentInChildren<BeatScroller>();
+
+        if (beatScroller != null)
+        {
+            beatScroller.hasStarted = true;
+        }
+    }
+
 
     void Update()
     {
@@ -100,12 +178,11 @@ public class GameManager : MonoBehaviour
         float totalHit = normalHits + goodHits + perfectHits;
         float percentHit = (totalHit / totalNotes) * 100f;
         percentHitText.text = percentHit.ToString("F1") + "%";
-        string rankVal;
 
+        string rankVal;
         if (percentHit > 95)
         {
             rankVal = "A+";
-
         }
         else if (percentHit > 85)
         {
@@ -126,26 +203,14 @@ public class GameManager : MonoBehaviour
         else
         {
             rankVal = "F";
-
         }
-
-        if(percentHit>70)
-        {
-            winLoseText.text = "You Win!";
-            winLoseText.color = Color.green;
-        }
-        else
-        {
-            winLoseText.text = "You Lose!";
-            winLoseText.color = Color.red;
-        }
-
         rankText.text = rankVal;
         finalScoreText.text = currentScore.ToString();
         tryAgainButton.gameObject.SetActive(true);
         quitButton.gameObject.SetActive(true);
         SaveScoreToFile(totalHit, percentHit);
     }
+
     void SaveScoreToFile(float totalHit, float percentHit)
     {
         string filePath = Application.persistentDataPath + "/scores.txt";
@@ -168,6 +233,13 @@ public class GameManager : MonoBehaviour
 
         File.WriteAllLines(filePath, lines);
     }
+
+    void CreateInitialFile(string filePath)
+    {
+        string initialContent = "Score Records\n\nFISHER Records:\n\nBaby Shark Records:\n\nNANANA Records:\n\n";
+        File.WriteAllText(filePath, initialContent);
+    }
+
     List<string> UpdateSongScoresInFile(List<string> lines, string songTitle, string newScoreEntry)
     {
         int songHeaderIndex = lines.FindIndex(line => line.Contains(songTitle + " Records:"));
@@ -187,10 +259,17 @@ public class GameManager : MonoBehaviour
         return lines;
     }
 
-    void CreateInitialFile(string filePath)
+    int GetScoreFromEntry(string scoreEntry)
     {
-        string initialContent = "Score Records\n\nFISHER Records:\n\nBaby Shark Records:\n\nNANANA Records:\n\n";
-        File.WriteAllText(filePath, initialContent);
+        string[] parts = scoreEntry.Split(new string[] { "Score: " }, System.StringSplitOptions.None);
+        if (parts.Length > 1)
+        {
+            if (int.TryParse(parts[1], out int score))
+            {
+                return score;
+            }
+        }
+        return 0;
     }
     string GetSongTitle()
     {
@@ -209,27 +288,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void AppendScoresForSong(string filePath, string songTitle, List<string> scoresList)
-    {
-        File.AppendAllText(filePath, songTitle + " Records:\n\n");
-        foreach (string score in scoresList.Where(s => s.StartsWith(songTitle)))
-        {
-            File.AppendAllText(filePath, score + "\n");
-        }
-        File.AppendAllText(filePath, "\n");
-    }
-    int GetScoreFromEntry(string scoreEntry)
-    {
-        string[] parts = scoreEntry.Split(new string[] { "Score: " }, System.StringSplitOptions.None);
-        if (parts.Length > 1)
-        {
-            if (int.TryParse(parts[1], out int score))
-            {
-                return score;
-            }
-        }
-        return 0;
-    }
     public void NoteHit()
     {
         if (currentMultiplier - 1 < multiplierThresholds.Length)
@@ -274,43 +332,6 @@ public class GameManager : MonoBehaviour
         missedHits++;
     }
 
-    public void SetBackground(int backgroundIndex)
-    {
-        if (backgroundIndex >= 0 && backgroundIndex < backgrounds.Length)
-        {
-            backgroundImage.sprite = backgrounds[backgroundIndex];
-            currentBackgroundIndex = backgroundIndex;
-        }
-    }
-
-    public void PlaySong(int songIndex)
-    {
-        if (songIndex >= 0 && songIndex < songs.Length)
-        {
-            theMusic.Stop();
-            theMusic.clip = songs[songIndex];
-            theMusic.Play();
-            currentSongIndex = songIndex;
-        }
-    }
-
-    public void ChangeBackgroundAndSong(int backgroundIndex, int songIndex)
-    {
-        SetBackground(backgroundIndex);
-        PlaySong(songIndex);
-    }
-
-    public void NextBackground()
-    {
-        currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.Length;
-        SetBackground(currentBackgroundIndex);
-    }
-
-    public void NextSong()
-    {
-        currentSongIndex = (currentSongIndex + 1) % songs.Length;
-        PlaySong(currentSongIndex);
-    }
     public void TryAgain()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -320,3 +341,5 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
+
+

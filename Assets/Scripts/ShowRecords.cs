@@ -19,11 +19,6 @@ public class ShowRecords : MonoBehaviour
         filePath = Application.persistentDataPath + "/scores.txt";
     }
 
-    void Update()
-    {
-        
-    }
-
     public void DisplayRecords()
     {
         if (!RecordsScreen.activeInHierarchy)

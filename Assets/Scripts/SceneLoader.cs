@@ -22,7 +22,6 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(delayBeforeLoad);
 
         GameManager2.Instance.SetSongData(songData); 
-        //SceneManager.LoadScene("FISHER");
         SceneManager.LoadScene("GameScene");
     }
 }

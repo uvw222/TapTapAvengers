@@ -8,27 +8,21 @@ using System.IO;
 
 public class GameManager : MonoBehaviour
 {
-    private float totalNotes, normalHits, goodHits, perfectHits, missedHits;
+    private float totalNotes, normalHits,missedHits;
     public GameObject resultsScreen;
-    public AudioSource theMusic;   // AudioSource for the song
-    public AudioSource countdownMusicSource;  // Separate AudioSource for countdown music
+    public AudioSource theMusic;  
+    public AudioSource countdownMusicSource;
     public bool startPlaying;
     public BeatScroller theBS;
     public static GameManager instance;
-    public Text scoreText, multiText, percentHitText, normalsText, goodsText, perfectsText, missesText, rankText, finalScoreText, countdownText;
-    public int currentScore, scorePerNote = 100, scorePerGoodNote = 125, scorePerPerfectNote = 150;
+    public Text winLoseText, scoreText, multiText, percentHitText, normalsText, missesText, rankText, finalScoreText, countdownText;
+    public int currentScore, scorePerNote = 100;
     public int currentMultiplier, multiplierTracker;
     public int[] multiplierThresholds;
     public Button tryAgainButton;
     public Button quitButton;
-
-    private SongData currentSongData;  // The current song's data
-    public GameObject buttonsObject;
-
-    // New field for the Bg SpriteRenderer object
+    private SongData currentSongData; 
     public SpriteRenderer bg;
-
-    // Note holder for spawning arrows
     public Transform noteHolder;
 
     void Start()
@@ -41,20 +35,13 @@ public class GameManager : MonoBehaviour
         totalNotes = FindObjectsOfType<NoteObject>().Length;
         resultsScreen.SetActive(false);
 
-        // Disable buttons at the start
-        if (buttonsObject != null)
-        {
-            buttonsObject.SetActive(false);
-        }
-
-        // Fetch the SongData from GameManager2
         currentSongData = GameManager2.Instance.GetSongData();
 
         if (currentSongData != null)
         {
-            SetBackground(currentSongData.backgroundImage);  // Set the background from SongData
-            SpawnArrows(currentSongData.arrowsPrefab);       // Spawn arrows from SongData
-            StartCoroutine(PlayCountdownAndStartSong());     // Play countdown music first, then the actual song
+            SetBackground(currentSongData.backgroundImage);  
+            SpawnArrows(currentSongData.arrowsPrefab);      
+            StartCoroutine(PlayCountdownAndStartSong());    
         }
         else
         {
@@ -71,14 +58,10 @@ public class GameManager : MonoBehaviour
 
         if (backgroundSprite != null)
         {
-            bg.sprite = backgroundSprite;  // Set the sprite for the background image
+            bg.sprite = backgroundSprite; 
         }
     }
 
-    /// <summary>
-    /// Spawns the arrows from the prefab in the SongData.
-    /// </summary>
-    /// <param name="arrowsPrefab">The prefab containing the arrows for the current song.</param>
     void SpawnArrows(GameObject arrowsPrefab)
     {
         if (arrowsPrefab == null)
@@ -86,57 +69,39 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No arrows prefab assigned in SongData.");
             return;
         }
-
-        // Find or create the NoteHolder parent object
         GameObject noteHolder = GameObject.Find("NoteHolder");
         if (noteHolder == null)
         {
             noteHolder = new GameObject("NoteHolder");
         }
 
-        // Instantiate the arrows prefab as a child of NoteHolder
         GameObject arrowsInstance = Instantiate(arrowsPrefab, noteHolder.transform);
     }
 
     IEnumerator PlayCountdownAndStartSong()
     {
-        // Assuming you have a Text UI element in the scene assigned to this
-        countdownText.gameObject.SetActive(true);
-
-        // Start countdown from 3 down to 0
+        countdownText.gameObject.SetActive(true);        
         for (int i = 3; i > 0; i--)
         {
-            countdownText.text = i.ToString();  // Update the text with the countdown number
-            yield return new WaitForSeconds(1f); // Wait for 1 second
+            countdownText.text = i.ToString();  
+            yield return new WaitForSeconds(1f);
         }
 
-        // After the countdown, set text to "Go!" and then hide it
         countdownText.text = "Go!";
         yield return new WaitForSeconds(1f);
-
         countdownText.gameObject.SetActive(false);
-
-        // Enable the buttons after the countdown
-        if (buttonsObject != null)
-        {
-            buttonsObject.SetActive(true);
-        }
-
-        // Start playing the actual song after the countdown
         PlayGameMusic();
         startPlaying = true;
-
-        // Start the BeatScroller to move the arrows
         StartBeatScroller();
     }
 
     void PlayGameMusic()
     {
-        // Play the selected song from SongData
+        
         if (currentSongData != null && currentSongData.songClip != null)
         {
-            theMusic.clip = currentSongData.songClip;  // Assign the song from SongData
-            theMusic.Play();  // Play the game music
+            theMusic.clip = currentSongData.songClip; 
+            theMusic.Play();
         }
         else
         {
@@ -144,10 +109,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // New function to start the BeatScroller
     void StartBeatScroller()
     {
-        // Try to find the BeatScroller component on the instantiated NoteHolder object
         BeatScroller beatScroller = noteHolder.GetComponentInChildren<BeatScroller>();
 
         if (beatScroller != null)
@@ -155,7 +118,6 @@ public class GameManager : MonoBehaviour
             beatScroller.hasStarted = true;
         }
     }
-
 
     void Update()
     {
@@ -172,11 +134,10 @@ public class GameManager : MonoBehaviour
     {
         resultsScreen.SetActive(true);
         normalsText.text = normalHits.ToString();
-        goodsText.text = goodHits.ToString();
-        perfectsText.text = perfectHits.ToString();
         missesText.text = missedHits.ToString();
-        float totalHit = normalHits + goodHits + perfectHits;
-        float percentHit = (totalHit / totalNotes) * 100f;
+        float totalHit = normalHits;
+        float arrowAmount = currentSongData.arrowsPrefab.transform.childCount;
+        float percentHit = (totalHit / arrowAmount) * 100f;
         percentHitText.text = percentHit.ToString("F1") + "%";
 
         string rankVal;
@@ -204,6 +165,18 @@ public class GameManager : MonoBehaviour
         {
             rankVal = "F";
         }
+        if (percentHit > 70)
+        {
+            winLoseText.text = "You Win!";
+            winLoseText.color = Color.green;
+        }
+        else
+        {
+            winLoseText.text = "You Lose!";
+            winLoseText.color = Color.red;
+        }
+
+
         rankText.text = rankVal;
         finalScoreText.text = currentScore.ToString();
         tryAgainButton.gameObject.SetActive(true);
@@ -308,20 +281,6 @@ public class GameManager : MonoBehaviour
         currentScore += scorePerNote * currentMultiplier;
         NoteHit();
         normalHits++;
-    }
-
-    public void GoodHit()
-    {
-        currentScore += scorePerGoodNote * currentMultiplier;
-        NoteHit();
-        goodHits++;
-    }
-
-    public void PerfectHit()
-    {
-        currentScore += scorePerPerfectNote * currentMultiplier;
-        NoteHit();
-        perfectHits++;
     }
 
     public void NoteMissed()

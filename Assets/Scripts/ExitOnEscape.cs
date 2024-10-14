@@ -14,12 +14,12 @@ public class ExitOnEscape : MonoBehaviour
 
     void ExitGame()
     {
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#else
+        #else
             // If running as a standalone build
             Application.Quit();
-#endif
+        #endif
     }
 }
 

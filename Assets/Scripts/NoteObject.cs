@@ -8,12 +8,7 @@ public class NoteObject : MonoBehaviour
     public KeyCode keyToPress;
     private bool noteHit = false;
 
-    public GameObject hitEffect, goodEffect, perfectEffect, missEffect;
-
-    void Start()
-    {
-        
-    }
+    public GameObject hitEffect, missEffect;
 
     void Update()
     {
@@ -29,16 +24,7 @@ public class NoteObject : MonoBehaviour
                     GameManager.instance.NormalHit();
                     Instantiate(hitEffect, transform.position, hitEffect.transform.rotation);
                 }
-                else if(Mathf.Abs(transform.position.y)>0.05f)
-                {
-                    GameManager.instance.GoodHit();
-                    Instantiate(goodEffect, transform.position, goodEffect.transform.rotation);
-                }
-                else
-                {
-                    GameManager.instance.PerfectHit();
-                    Instantiate(perfectEffect, transform.position, perfectEffect.transform.rotation);
-                }
+                
             }
         }
     }

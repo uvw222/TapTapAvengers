@@ -1169,8 +1169,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 109, y: -533}
-  m_SizeDelta: {x: 250, y: 187}
+  m_AnchoredPosition: {x: 109, y: -482}
+  m_SizeDelta: {x: 250, y: 82.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &806975313
 MonoBehaviour:
@@ -2442,29 +2442,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c82cb3f53ef4ef4ebb5d72e4a2c8f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentLevel: 
+  currentScore: 0
+  currentMultiplier: 1
+  multiplierTracker: 0
+  scorePerNote: 100
+  multiplierThresholds: 040000000800000010000000
+  startPlaying: 0
   resultsScreen: {fileID: 1571994291}
   theMusic: {fileID: 1594974179}
   countdownMusicSource: {fileID: 1594974179}
-  startPlaying: 0
   theBS: {fileID: 0}
   winLoseText: {fileID: 1614236757}
   scoreText: {fileID: 130539503}
   multiText: {fileID: 1573406165}
   percentHitText: {fileID: 1052644607}
   normalsText: {fileID: 1324268042}
-  goodsText: {fileID: 0}
-  perfectsText: {fileID: 0}
   missesText: {fileID: 2143914807}
   rankText: {fileID: 129515595}
   finalScoreText: {fileID: 1947847551}
   countdownText: {fileID: 12159394}
-  currentScore: 0
-  scorePerNote: 100
-  scorePerGoodNote: 125
-  scorePerPerfectNote: 150
-  currentMultiplier: 1
-  multiplierTracker: 0
-  multiplierThresholds: 040000000800000010000000
   tryAgainButton: {fileID: 2063540319}
   quitButton: {fileID: 806975315}
   bg: {fileID: 1777393071}
@@ -2602,7 +2599,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -123, y: 128}
+  m_AnchoredPosition: {x: -131, y: 82}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1917813989
@@ -2738,7 +2735,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -54, y: 130}
+  m_AnchoredPosition: {x: -67, y: 82}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1920946643
@@ -3107,8 +3104,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -144, y: -533}
-  m_SizeDelta: {x: 250, y: 187}
+  m_AnchoredPosition: {x: -144, y: -482}
+  m_SizeDelta: {x: 250, y: 82.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2063540317
 MonoBehaviour:

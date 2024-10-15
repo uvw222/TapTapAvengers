@@ -19,7 +19,7 @@ public class ShowRecords : MonoBehaviour
     void Start()
     {
         RecordsScreen.SetActive(false);
-        filePath = Application.persistentDataPath + "/scores.txt";
+        filePath = Application.persistentDataPath + "/gameScores.txt";
     }
 
     public void DisplayRecords()

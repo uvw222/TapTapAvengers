@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour
 
     void SaveScoreToFile(float totalHit, float percentHit)
     {
-        string filePath = Application.persistentDataPath + "/scores.txt";
+        string filePath = Application.persistentDataPath + "/gameScores.txt";
         string songTitle = GetSongTitle();
 
         string newScoreEntry = songTitle + ": Total Hits: " + totalHit.ToString("F0") + ", Percent: " + percentHit.ToString("F1") + "%, Score: " + currentScore;

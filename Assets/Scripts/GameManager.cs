@@ -200,11 +200,11 @@ public class GameManager : MonoBehaviour
         string songTitle = GetSongTitle();
 
         string newScoreEntry = songTitle + ": Total Hits: " + totalHit.ToString("F0") + ", Percent: " + percentHit.ToString("F1") + "%, Score: " + currentScore;
-
+        
         List<string> lines = new List<string>();
         if (File.Exists(filePath))
         {
-            lines = File.ReadAllLines(filePath).ToList();
+            lines = File.ReadAllLines(filePath).ToList();            
         }
         else
         {
@@ -213,34 +213,49 @@ public class GameManager : MonoBehaviour
         }
 
         lines = UpdateSongScoresInFile(lines, songTitle, newScoreEntry);
-
         File.WriteAllLines(filePath, lines);
     }
 
     void CreateInitialFile(string filePath)
     {
-        string initialContent = "Score Records\n\nFISHER Records:\n\nBaby Shark Records:\n\nNANANA Records:\n\n";
+        string initialContent = "Score Records\n\n" +
+                                "FISHER (easy) Records:\n\n" +
+                                "FISHER (hard) Records:\n\n" +
+                                "Baby Shark (easy) Records:\n\n" +
+                                "Baby Shark (hard) Records:\n\n" +
+                                "NANANA (easy) Records:\n\n" +
+                                "NANANA (hard) Records:\n\n";
         File.WriteAllText(filePath, initialContent);
     }
 
+
     List<string> UpdateSongScoresInFile(List<string> lines, string songTitle, string newScoreEntry)
     {
-        int songHeaderIndex = lines.FindIndex(line => line.Contains(songTitle + " Records:"));
-
+        songTitle = songTitle.Trim().ToLower();
+        int songHeaderIndex = lines.FindIndex(line => line.Trim().ToLower().Contains(songTitle));
         if (songHeaderIndex != -1)
         {
+            // Find the next section or empty line after the current song's section
             int nextSectionIndex = lines.FindIndex(songHeaderIndex + 1, line => line.Contains("Records:") || string.IsNullOrWhiteSpace(line));
             if (nextSectionIndex == -1) nextSectionIndex = lines.Count;
+
+            // Extract the current song scores, add the new score, and reorder
             List<string> songScores = lines.Skip(songHeaderIndex + 1).Take(nextSectionIndex - songHeaderIndex - 1).ToList();
             songScores.Add(newScoreEntry);
-            songScores = songScores.OrderByDescending(GetScoreFromEntry).Take(3).ToList();
+            songScores = songScores.OrderByDescending(GetScoreFromEntry).Take(3).ToList(); // Top 3 scores for this song
+
+            // Replace the old scores with the updated scores
             lines.RemoveRange(songHeaderIndex + 1, nextSectionIndex - songHeaderIndex - 1);
             lines.InsertRange(songHeaderIndex + 1, songScores);
+
+            // Add an empty line after the new scores
             lines.Insert(songHeaderIndex + 1 + songScores.Count, "");
         }
 
         return lines;
     }
+
+
 
     int GetScoreFromEntry(string scoreEntry)
     {
@@ -256,20 +271,22 @@ public class GameManager : MonoBehaviour
     }
     string GetSongTitle()
     {
-        string sceneName = SceneManager.GetActiveScene().name;
-
+        string sceneName = currentSongData.songName;
+        string level = CurrentLevel;
+        
         switch (sceneName)
         {
-            case "FISHER":
-                return "FISHER";
-            case "BabyShark":
-                return "Baby Shark";
-            case "NANANA":
-                return "NANANA";
+            case "fisher":
+                return "FISHER (" + level + ")";
+            case "babyShark":
+                return "Baby Shark (" + level + ")";
+            case "nanana":
+                return "NANANA (" + level + ")";
             default:
                 return "Unknown Song";
         }
     }
+
 
     public void NoteHit()
     {

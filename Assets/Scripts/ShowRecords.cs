@@ -9,19 +9,17 @@ using System.Linq;
 public class ShowRecords : MonoBehaviour
 {
     public GameObject RecordsScreen;
-    public Text fisherName1, fisherName2, fisherName3;
-    public Text babySharkName1, babySharkName2, babySharkName3;
-    public Text nananaName1, nananaName2, nananaName3;
+    public Text fisherEasyName1, fisherEasyName2, fisherEasyName3;
+    public Text fisherHardName1, fisherHardName2, fisherHardName3;
+    public Text babySharkEasyName1, babySharkEasyName2, babySharkEasyName3;
+    public Text babySharkHardName1, babySharkHardName2, babySharkHardName3;
+    public Text nananaEasyName1, nananaEasyName2, nananaEasyName3;
+    public Text nananaHardName1, nananaHardName2, nananaHardName3;
     private string filePath;
     void Start()
     {
         RecordsScreen.SetActive(false);
         filePath = Application.persistentDataPath + "/scores.txt";
-    }
-
-    void Update()
-    {
-        
     }
 
     public void DisplayRecords()
@@ -37,9 +35,13 @@ public class ShowRecords : MonoBehaviour
 
         string[] lines = File.ReadAllLines(filePath);
 
-        DisplayTopRecordsForSong(lines, "FISHER", fisherName1, fisherName2, fisherName3);
-        DisplayTopRecordsForSong(lines, "Baby Shark", babySharkName1, babySharkName2, babySharkName3);
-        DisplayTopRecordsForSong(lines, "NANANA", nananaName1, nananaName2, nananaName3);
+        DisplayTopRecordsForSong(lines, "FISHER (easy)", fisherEasyName1, fisherEasyName2, fisherEasyName3);
+        DisplayTopRecordsForSong(lines, "Baby Shark (easy)", babySharkEasyName1, babySharkEasyName2, babySharkEasyName3);
+        DisplayTopRecordsForSong(lines, "NANANA (easy)", nananaEasyName1, nananaEasyName2, nananaEasyName3);
+
+        DisplayTopRecordsForSong(lines, "FISHER (hard)", fisherHardName1, fisherHardName2, fisherHardName3);
+        DisplayTopRecordsForSong(lines, "Baby Shark (hard)", babySharkHardName1, babySharkHardName2, babySharkHardName3);
+        DisplayTopRecordsForSong(lines, "NANANA (hard)", nananaHardName1, nananaHardName2, nananaHardName3);
     }
 
     void DisplayTopRecordsForSong(string[] lines, string songTitle, Text name1, Text name2, Text name3)

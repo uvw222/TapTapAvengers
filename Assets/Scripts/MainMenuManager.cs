@@ -1,23 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager2 : MonoBehaviour
 {
-    public AudioSource audioSource;  
-    public AudioClip song1;  
-    public AudioClip song2;  
-    public AudioClip song3;  
+    public static GameManager2 Instance;
+    private SongData currentSongData;
+    private string currentLevel;
 
-    private void Start()
+    private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    private void LoadGameScene()
+    public void SetSongData(SongData songData)
     {
-        SceneManager.LoadScene("GameScene");  
+        currentSongData = songData;
+    }
+
+    public void SetLevel(string level)
+    {
+        currentLevel = level;
+    }
+
+    public string GetLevel()
+    {
+        return currentLevel;
+    }
+    public SongData GetSongData()
+    {
+        return currentSongData;
     }
 }
-

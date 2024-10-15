@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e778c0c4cd6f54489dc78fd4a25dae, type: 3}
+  m_Name: babySharkData
+  m_EditorClassIdentifier: 
+  songName: babyShark
+  songClip: {fileID: 8300000, guid: 0be0010d997659d45a0faebc15920af2, type: 3}
+  backgroundImage: {fileID: 21300000, guid: 6b0629eaeae9adf43b791c7c7384f0e6, type: 3}
+  easyArrowsPrefab: {fileID: 7825761795606688742, guid: fae543535cc7bd140ad34652707fb778, type: 3}
+  hardArrowsPrefab: {fileID: 9137444141347153156, guid: 827e703411c1c714dbed93c8f36c7ff6, type: 3}

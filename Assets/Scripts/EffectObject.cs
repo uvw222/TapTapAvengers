@@ -9,8 +9,4 @@ public class EffectObject : MonoBehaviour
     {
         Destroy(gameObject, lifetime);
     }
-
-    void Update()
-    {
-    }
 }

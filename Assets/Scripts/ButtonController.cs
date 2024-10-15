@@ -13,7 +13,7 @@ public class ButtonController : MonoBehaviour
     void Start()
     {
         theSR = GetComponent<SpriteRenderer>();
-        theSR.sprite = pressedImage;
+        theSR.sprite = defaultImage;
     }
 
 

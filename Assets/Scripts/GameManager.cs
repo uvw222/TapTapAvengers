@@ -8,20 +8,18 @@ using System.IO;
 
 public class GameManager : MonoBehaviour
 {
-    private float totalNotes, normalHits,missedHits;
-    public GameObject resultsScreen;
-    public AudioSource theMusic;  
-    public AudioSource countdownMusicSource;
-    public bool startPlaying;
-    public BeatScroller theBS;
-    public static GameManager instance;
-    public Text winLoseText, scoreText, multiText, percentHitText, normalsText, missesText, rankText, finalScoreText, countdownText;
-    public int currentScore, scorePerNote = 100;
-    public int currentMultiplier, multiplierTracker;
+    private float totalNotes, normalHits, missedHits;
+    public string CurrentLevel;
+    public int currentScore, currentMultiplier, multiplierTracker, scorePerNote = 100;
     public int[] multiplierThresholds;
-    public Button tryAgainButton;
-    public Button quitButton;
-    private SongData currentSongData; 
+    public bool startPlaying;
+    public static GameManager instance;
+    public GameObject resultsScreen;
+    public AudioSource theMusic, countdownMusicSource;
+    public BeatScroller theBS;
+    public Text winLoseText, scoreText, multiText, percentHitText, normalsText, missesText, rankText, finalScoreText, countdownText;
+    public Button tryAgainButton, quitButton;
+    private SongData currentSongData;
     public SpriteRenderer bg;
     public Transform noteHolder;
 
@@ -36,12 +34,20 @@ public class GameManager : MonoBehaviour
         resultsScreen.SetActive(false);
 
         currentSongData = GameManager2.Instance.GetSongData();
+        CurrentLevel = GameManager2.Instance.GetLevel();
 
         if (currentSongData != null)
         {
-            SetBackground(currentSongData.backgroundImage);  
-            SpawnArrows(currentSongData.arrowsPrefab);      
-            StartCoroutine(PlayCountdownAndStartSong());    
+            SetBackground(currentSongData.backgroundImage);
+            if (CurrentLevel == "Hard")
+            {
+                SpawnArrows(currentSongData.hardArrowsPrefab);
+            }
+            else
+            {
+                SpawnArrows(currentSongData.easyArrowsPrefab);
+            }
+            StartCoroutine(PlayCountdownAndStartSong());
         }
         else
         {
@@ -58,7 +64,7 @@ public class GameManager : MonoBehaviour
 
         if (backgroundSprite != null)
         {
-            bg.sprite = backgroundSprite; 
+            bg.sprite = backgroundSprite;
         }
     }
 
@@ -80,10 +86,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator PlayCountdownAndStartSong()
     {
-        countdownText.gameObject.SetActive(true);        
+        countdownText.gameObject.SetActive(true);
         for (int i = 3; i > 0; i--)
         {
-            countdownText.text = i.ToString();  
+            countdownText.text = i.ToString();
             yield return new WaitForSeconds(1f);
         }
 
@@ -97,10 +103,10 @@ public class GameManager : MonoBehaviour
 
     void PlayGameMusic()
     {
-        
+
         if (currentSongData != null && currentSongData.songClip != null)
         {
-            theMusic.clip = currentSongData.songClip; 
+            theMusic.clip = currentSongData.songClip;
             theMusic.Play();
         }
         else
@@ -136,11 +142,15 @@ public class GameManager : MonoBehaviour
         normalsText.text = normalHits.ToString();
         missesText.text = missedHits.ToString();
         float totalHit = normalHits;
-        float arrowAmount = currentSongData.arrowsPrefab.transform.childCount;
+        string rankVal;
+        float arrowAmount = currentSongData.easyArrowsPrefab.transform.childCount;
+        if (CurrentLevel == "Hard")
+        {
+            arrowAmount = currentSongData.hardArrowsPrefab.transform.childCount;
+        }
         float percentHit = (totalHit / arrowAmount) * 100f;
         percentHitText.text = percentHit.ToString("F1") + "%";
 
-        string rankVal;
         if (percentHit > 95)
         {
             rankVal = "A+";

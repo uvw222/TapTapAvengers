@@ -6683,7 +6683,7 @@ GameObject:
   - component: {fileID: 5407914149973932405}
   - component: {fileID: 7216323091579888255}
   m_Layer: 5
-  m_Name: BabySharkArrows
+  m_Name: BabySharkEasyArrows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

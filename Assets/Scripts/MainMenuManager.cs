@@ -6,6 +6,7 @@ public class GameManager2 : MonoBehaviour
 {
     public static GameManager2 Instance;
     private SongData currentSongData;
+    private string currentLevel;
 
     private void Awake()
     {
@@ -25,6 +26,15 @@ public class GameManager2 : MonoBehaviour
         currentSongData = songData;
     }
 
+    public void SetLevel(string level)
+    {
+        currentLevel = level;
+    }
+
+    public string GetLevel()
+    {
+        return currentLevel;
+    }
     public SongData GetSongData()
     {
         return currentSongData;

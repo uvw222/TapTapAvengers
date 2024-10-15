@@ -15,4 +15,5 @@ MonoBehaviour:
   songName: fisher
   songClip: {fileID: 8300000, guid: 1858b8cbb236a4444b9197f707c21dd5, type: 3}
   backgroundImage: {fileID: 21300000, guid: 40a05d0bd2626e140a7e26ff0239c005, type: 3}
-  arrowsPrefab: {fileID: 8504153970349195523, guid: 9a6e68ddd5960ae4aa68695b4734a9d2, type: 3}
+  easyArrowsPrefab: {fileID: 8504153970349195523, guid: 9a6e68ddd5960ae4aa68695b4734a9d2, type: 3}
+  hardArrowsPrefab: {fileID: 5062902288133083225, guid: 1decd16c86db7c7479a7c213a703ed71, type: 3}

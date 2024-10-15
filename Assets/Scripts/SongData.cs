@@ -6,5 +6,6 @@ public class SongData : ScriptableObject
     public string songName;
     public AudioClip songClip;       
     public Sprite backgroundImage;
-    public GameObject arrowsPrefab; 
+    public GameObject easyArrowsPrefab; 
+    public GameObject hardArrowsPrefab; 
 }
